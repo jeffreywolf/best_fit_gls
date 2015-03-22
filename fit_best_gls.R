@@ -1,24 +1,24 @@
 library(nlme)
-fit_best_gls = function(expression, data){
+fit_best_gls = function(expression, spform=~x+y, data){
 	print("In fit best gls")
 	#print(expr)
 	gls_gaus = gls(
 		expression, 
-		correlation = corGaus(form= ~gx+gy, nugget=T),
+		correlation = corGaus(form= spform, nugget=T),
 		method='ML',
 		data=data
 	)
 	print("Finished fitting GLS with Gaussian Autocorrellogram")
 	gls_sph = gls(
 		expression, 
-		correlation = corSpher(form= ~gx+gy, nugget=T),
+		correlation = corSpher(form= spform, nugget=T),
 		method='ML',
 		data=data
 	)
 	print("Finished fitting GLS with Spherical Autocorrellogram")
 	gls_exp = gls(
 		expression, 
-		correlation = corExp(form= ~gx+gy, nugget=T),
+		correlation = corExp(form= spform, nugget=T),
 		method='ML',
 		data=data
 	)
@@ -34,3 +34,8 @@ fit_best_gls = function(expression, data){
 	}
 	return(best)
 }
+
+# Note:
+# spform is a formula such as: ~x+y
+# that specifies the 2D coordinates used to represent spatial location
+# in a projected coordinate system 
